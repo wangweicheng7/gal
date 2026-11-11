@@ -1,0 +1,23 @@
+name: gal_ohos
+description: HarmonyOS implementation of Gal using system-confirmed gallery saves.
+version: 1.0.0
+publish_to: https://pub.dev
+homepage: https://github.com/wangweicheng7/gal
+repository: https://github.com/wangweicheng7/gal/tree/feat/gal-ohos-1.0.0/packages/gal_ohos
+issue_tracker: https://github.com/wangweicheng7/gal/issues
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.7.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  plugin:
+    implements: gal
+    platforms:
+      ohos:
+        package: cn.pawrio.gal
+        pluginClass: GalOhosPlugin

@@ -1,0 +1,10 @@
+{
+  "name": "gal_ohos",
+  "version": "1.0.0",
+  "description": "System-confirmed media saves for Gal.",
+  "main": "index.ets",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "@ohos/flutter_ohos": "file:libs/flutter.har"
+  }
+}

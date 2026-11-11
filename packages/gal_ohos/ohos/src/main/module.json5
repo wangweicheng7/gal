@@ -1,0 +1,10 @@
+{
+  "module": {
+    "name": "gal_ohos",
+    "type": "har",
+    "deviceTypes": [
+      "phone",
+      "tablet"
+    ]
+  }
+}

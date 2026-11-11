@@ -246,3 +246,13 @@ Although Gal has only been released for a short time, it's already trusted by ma
 * ### [Thunder - 0.8k⭐️](https://github.com/thunder-app/thunder)
 
 and more...
+
+## HarmonyOS platform implementation
+
+This fork adds the independent federated package [gal_ohos](packages/gal_ohos).
+The original Gal package remains at the repository root. Only `packages/gal_ohos`
+is intended for publication to pub.dev from this fork. See its README for setup,
+system-confirmed saves, supported APIs, platform limitations and publication.
+
+The implementation branch `feat/gal-ohos-1.0.0` starts from the official
+`v2.3.3` release, not the moving `main` branch.

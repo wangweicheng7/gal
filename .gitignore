@@ -69,3 +69,8 @@ GeneratedPluginRegistrant.*
 !*.[Cc]ache/
 **/x64/
 **/x86/
+
+# HarmonyOS plugin tooling
+.fvm/
+!/.fvmrc
+!/packages/gal_ohos/.pubignore

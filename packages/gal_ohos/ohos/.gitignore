@@ -1,0 +1,5 @@
+oh_modules/
+.hvigor/
+build/
+libs/
+oh-package-lock.json5
