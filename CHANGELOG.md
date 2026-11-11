@@ -1,5 +1,7 @@
 ## 2.3.3
 
+* Endorses the public gal_ohos platform implementation.
+
 * Fix Windows build on latest MSVC by removing /await flag #324
 
 ## 2.3.2

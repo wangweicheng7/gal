@@ -246,3 +246,34 @@ Although Gal has only been released for a short time, it's already trusted by ma
 * ### [Thunder - 0.8k⭐️](https://github.com/thunder-app/thunder)
 
 and more...
+
+## HarmonyOS 私有版本
+
+官方源码来自 v2.3.3 标签（5a36aff5b0669690cd94a9443a6eed64d4c7cc78），
+适配分支为 adapt/gal-2.3.3-ohos，主包 Dart API 保持官方实现。
+主包声明 `ohos.default_package: gal_ohos`，通过 pub.dev hosted 依赖公开的
+`gal_ohos: ^1.0.0`，App 只依赖主包即可传递引入鸿蒙实现。
+
+公开平台源码维护于 https://github.com/wangweicheng7/gal 的
+`packages/gal_ohos`，本地位于 `../upstream/gal/packages/gal_ohos`。
+该 GitHub fork 保留完整上游 Git 历史，与此目录的官方 Gal 私仓配置分别维护。
+平台包通过原有 `gal` MethodChannel 注册；保存图片、字节和视频时每次展示系统确认。
+默认 hasAccess/requestAccess 表示交互保存入口可用。自定义相册暂不支持，
+toAlbum=true 返回 false，显式 album 保存抛出 UNEXPECTED。取消保存映射 ACCESS_DENIED。
+Gal.open 的设备支持情况及完整语义见平台包 README。
+
+发布顺序为先将 gal_ohos 推送 GitHub 并发布到 pub.dev，再发布本主包到私仓。
+平台包首次公开发布前，主包依赖与发布预检仅在隔离模拟仓库验证。
+实际公开包可下载后，进入本目录执行：
+
+```sh
+export PUB_HOSTED_URL=https://pub.pawrio.cn
+fvm flutter pub get --no-example
+fvm flutter test --no-pub
+fvm dart analyze lib test
+fvm dart pub publish --dry-run
+fvm dart pub publish
+```
+
+本主包 publish_to 仍为私仓上传地址；gal_ohos 显式 hosted 指向 pub.dev，
+不受 PUB_HOSTED_URL 私仓默认下载地址影响。公开平台包发布和主包私有发布均由负责人执行。

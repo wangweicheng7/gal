@@ -69,3 +69,8 @@ GeneratedPluginRegistrant.*
 !*.[Cc]ache/
 **/x64/
 **/x86/
+
+# Private package configuration
+.fvm/
+!/.fvmrc
+!/.pubignore
