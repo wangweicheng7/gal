@@ -10,7 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   dio: 5.9.2
-  gal:
+  gal: ^2.3.3
+  gal_ohos:
     path: ../
 
 dev_dependencies:

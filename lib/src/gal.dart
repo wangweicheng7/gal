@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
-import 'package:gal/src/gal_exception.dart';
-import 'package:gal/src/gal_platform_interface.dart';
+import 'gal_exception.dart';
+import 'gal_platform_interface.dart';
 
 /// Main class of gal.
 ///

@@ -1,19 +1,10 @@
-name: gal
-description: Flutter plugin to save images/videos to photos gallery with permission handling
-version: 2.3.3
-homepage: https://pub.dev/packages/gal
-repository: https://github.com/natsuk4ze/gal
-documentation: https://github.com/natsuk4ze/gal/wiki
-funding: 
- - https://github.com/sponsors/natsuk4ze
-
-topics:
- - gallery
- - video
- - image
- - photos
- - util
-
+name: gal_ohos
+description: HarmonyOS implementation of Gal using system-confirmed gallery saves.
+version: 1.0.0
+publish_to: https://pub.dev
+homepage: https://github.com/wangweicheng7/gal
+repository: https://github.com/wangweicheng7/gal/tree/feat/gal-ohos-1.0.0
+issue_tracker: https://github.com/wangweicheng7/gal/issues
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -24,19 +15,14 @@ dependencies:
     sdk: flutter
 
 dev_dependencies:
+  flutter_test:
+    sdk: flutter
   flutter_lints: ">=4.0.0 <7.0.0"
 
 flutter:
   plugin:
+    implements: gal
     platforms:
-      android:
-        package: studio.midoridesign.gal
-        pluginClass: GalPlugin
-      ios:
-        pluginClass: GalPlugin
-        sharedDarwinSource: true
-      macos:
-        pluginClass: GalPlugin
-        sharedDarwinSource: true
-      windows:
-        pluginClass: GalPluginCApi
+      ohos:
+        package: cn.pawrio.gal
+        pluginClass: GalOhosPlugin

@@ -1,258 +1,87 @@
-<p align="center">
-  <p align="center">
-   <img width="200" height="200" src="https://github.com/natsuk4ze/gal/raw/main/assets/logo.png" alt="Logo">
-  </p>
- <h1 align="center"><b>Gal</b></h1>
- <h3 align="center">
-  <b>
-   Dart3 plugin for saving image or video to photos gallery
-    <img src="https://is5-ssl.mzstatic.com/image/thumb/Purple122/v4/fe/3a/7e/fe3a7e0e-7f52-b750-0ed2-523998c59d48/AppIcon-0-0-1x_U007emarketing-0-0-0-7-0-0-sRGB-0-0-0-GLES2_U002c0-512MB-85-220-0-0.png/246x0w.webp" alt="ios photos" width="20" height="20"/> <img src="https://play-lh.googleusercontent.com/ZyWNGIfzUyoajtFcD7NhMksHEZh37f-MkHVGr5Yfefa-IX7yj9SMfI82Z7a2wpdKCA=w240-h480-rw" alt="google photos" width="20" height="20"/> <img src="https://upload.wikimedia.org/wikipedia/en/9/94/Microsoft_Photos_logo.png" alt="microsoft photos" width="22" height="22"/>
-  </b>
-  </h3>
- <p align="center">
-    <a href="https://pub.dev/packages/gal"><strong>pub.dev »</strong></a>
-    <br />
-    <br />
-    <img src="https://img.shields.io/badge/since-2023.06-purple" alt="Since">
-    <a href="https://pub.dev/packages/gal/score">
-    <img src="https://img.shields.io/pub/points/gal?color=2E8B57&label=pub%20points" alt="pub points">
-    </a>
-    <a href="https://www.codefactor.io/repository/github/natsuk4ze/gal">
-    <img src="https://www.codefactor.io/repository/github/natsuk4ze/gal/badge" alt="CodeFactor">
-    <a href="https://app.codacy.com/gh/natsuk4ze/gal/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
-    <img src="https://app.codacy.com/project/badge/Grade/3a20a89327ba43c789c0dc8465e16168" alt="Codacy Badge">
-    <img src="https://github.com/natsuk4ze/gal/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI">
-    <a href="https://pub.dev/packages/gal">
-    <img src="https://img.shields.io/pub/v/gal.svg" alt="pub package">
-    </a>  
-  </p>
-</p>
+# gal_ohos
 
-## 📢 Support Us
+Gal 的独立 HarmonyOS 原生平台实现，通过既有 `gal` MethodChannel 对接统一 Dart API。
+公开平台包版本为 1.0.0，无 Gal Dart 包依赖，因此主包和平台包的依赖关系保持单向。
 
-Please support our volunteer efforts by giving us a [LIKE👍](https://pub.dev/packages/gal) and [STAR⭐️](https://github.com/natsuk4ze/gal).
+## 功能与权限
 
-## 🧠 DeepWiki Documentation
+- `putImage`、`putImageBytes`、`putVideo` 使用系统 `showAssetsCreationDialog`，每次保存由用户确认。
+- `hasAccess()` 与 `requestAccess()` 表示默认交互保存入口可用，普通应用使用这条路径无需持久图库授权；返回 true 不表示永久读写图库权限。
+- `toAlbum: true` 返回 false，自定义 `album` 保存明确抛出 `UNEXPECTED`，附带不支持自定义相册的说明。
+- 用户取消保存映射为 `GalExceptionType.accessDenied`，空间不足映射为 `notEnoughSpace`。
+- 图片字节由系统图像解码器识别格式，临时文件位于 App 沙箱并在调用结束后清理。
+- 插件通过 AbilityAware 获取有效 UIAbilityContext，Ability 分离前停止新的弹窗；用户确认后的文件复制会完成已授权写入。
+- 成功返回发生在文件复制并同步完成后，失败时关闭文件并尽力清理本次创建的目标，保留原始错误。
+- `open()` 使用公开 `ohos.want.action.viewData` 和 image/* 能力解析，设备没有相应处理器时返回明确的 `UNEXPECTED`。此项设备相关能力需真机验收。
 
-[![DeepWiki](https://img.shields.io/badge/DeepWiki-Documentation-2E8B57?style=for-the-badge&logo=read-the-docs&logoColor=white)](https://deepwiki.com/natsuk4ze/gal/1-overview)
+消费 App 的 module.json5 需在 abilities 中配置 label 与 icon（Flutter 默认模板通常已具备），系统确认弹窗依赖这些应用信息。
 
-## 📱 Supported Platforms
+SDK 下限为 API12。当前 SDK 将图库全量读写权限列为 system_basic，本包通过系统保存确认能力完成普通 App 保存，不声明这些受限权限。
 
-|             | Android | iOS | macOS | Windows | Linux |
-|-------------|---------|-----|-------|---------|-------|
-| **Support** | SDK 21+ | 11+ |  11+  |   10+   | See: [gal_linux](https://pub.dev/packages/gal_linux) |
+## 来源
 
-**Support** means that all functions have been tested manually or [automatically](https://github.com/natsuk4ze/gal/actions/runs/7517751549) whenever possible.
+标准 Gal 来源为 `https://github.com/natsuk4ze/gal` 的 v2.3.3 标签，提交
+`5a36aff5b0669690cd94a9443a6eed64d4c7cc78`。本包 ArkTS 实现为本次新开发。
+本包初始发布版本为 1.0.0；审核 CPF-Flutter/fluttertpc_gal 的默认分支
+`4e29896c2408b63822524ad7764d3aeeece7826d` 未发现鸿蒙实现，公开 tag 和分支名称
+也未标识鸿蒙适配版本。它与官方发布标签仅有示例 Android Gradle 配置差异，Dart lib tree 相同。
+当前方案未引用该镜像，其审计副本保留于临时审核目录，公开实现维护于 https://github.com/wangweicheng7/gal 的根目录 ohos/，保留标准 Gal 的 Git 历史。
+上游许可证随包保留。
 
-## 📸 Demo
+官方资料与已安装 SDK 接口用于实现，包括 photoAccessHelper.showAssetsCreationDialog、
+ImageSource.getImageInfo、fileIo.copyFile 和 fsync。发布前需完成手机上的系统确认、
+取消、真实写入及图库打开行为验收，单元测试和 HAP 构建不替代真机验收。
 
-|             | iOS | Android |
-|-------------|-----|---------|
-| **Example** | <img src="https://github.com/natsuk4ze/gal/raw/main/assets/ios.gif" alt="ios" width="270"/> | <img src="https://github.com/natsuk4ze/gal/raw/main/assets/android.gif" alt="android" width="270"/> |
+最小真机验收覆盖：PNG 取消后返回 accessDenied；确认后图库能打开新增图片；
+不存在/空文件和自定义相册在弹窗前失败；本地视频保存成功；记录 Gal.open() 的设备表现。
+使用独立签名测试应用；签名和 bundleName 复用生产应用的探针只用于构建，安装前需单独确认覆盖范围。
 
-## ✨ Features
+## 使用
 
-* Open gallery
-* Save video
-* Save image
-* Save to album
-* Save with metadata
-* Handle permission
-* Handle errors
-* Comprehensive documentation and wiki
+官方 Gal 尚未内置鸿蒙声明时，App 同时声明主包与平台包：
 
-## 🚀 Getting Started
-
-### Add Dependency
-
-Add the latest stable version of gal to your dependencies:
-
-```console
-flutter pub add gal
+```yaml
+dependencies:
+  gal: ^2.3.3
+  gal_ohos: ^1.0.0
 ```
 
-### iOS Setup
+平台包通过 `implements: gal` 和原生 MethodChannel `gal` 注册，无需修改 Gal 的 Dart API。
+若使用已经声明 `ohos.default_package: gal_ohos` 的私有 Gal 主包，只依赖主包即可。
+平台包不依赖 Gal 主包，避免循环依赖。
 
-Add the following keys to `ios/Runner/Info.plist`:
+## 源码布局与发布
 
-* `<key>NSPhotoLibraryAddUsageDescription</key>` Required
-* `<key>NSPhotoLibraryUsageDescription</key>` Required for iOS < 14 or saving to album
+仓库： https://github.com/wangweicheng7/gal
 
-You can copy from [example's Info.plist](https://github.com/natsuk4ze/gal/blob/main/example/ios/Runner/Info.plist).
+本地唯一工作目录：`pub.dev/gal`。本仓库基于官方 `v2.3.3`
+（5a36aff5b0669690cd94a9443a6eed64d4c7cc78），保留上游 Git 历史。
+分支为 `feat/gal-ohos-1.0.0`；根 pubspec.yaml 定义 `name: gal_ohos`、
+`implements: gal`，只注册 ohos 原生实现。目录名称 gal 和 Pub 包名 gal_ohos 各司其职。
 
-### Android Setup
-
-Add the following keys to `android/app/src/main/AndroidManifest.xml`:
-
-* `<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-                 android:maxSdkVersion="29" />` Required for API <= 29
-* `android:requestLegacyExternalStorage="true"` Required for saving to album in API 29
-
-You can copy from [example's AndroidManifest.xml](https://github.com/natsuk4ze/gal/blob/main/example/android/app/src/main/AndroidManifest.xml).
-
-> [!WARNING]
-> Android emulators with API < 29 require SD card setup. Real devices don't.
-
-### macOS Setup
-
-Add the following keys to `macos/Runner/Info.plist`:
-
-* `<key>NSPhotoLibraryAddUsageDescription</key>` Required
-* `<key>NSPhotoLibraryUsageDescription</key>` Required for saving to album
-
-You can copy from [example's Info.plist](https://github.com/natsuk4ze/gal/blob/main/example/macos/Runner/Info.plist).
-
-> [!WARNING]
-> Flutter currently has a [fatal problem for loading info.plist](https://github.com/flutter/flutter/issues/134191), which may cause permission denials or app crashes in some code editors.
-
-### Windows Setup
-
-Update [Visual Studio](https://visualstudio.microsoft.com) to the latest version for using `C++ 20`.
-
-> [!TIP]
-> If you can't compile, try downloading the latest Windows SDK:
->
-> 1. Open Visual Studio Installer
-> 2. Select Modify
-> 3. Select Windows SDK
-
-### Linux Setup
-
-Linux is not officially supported, but can be added through a non-endorsed federated plugin.
-See: [gal_linux](https://pub.dev/packages/gal_linux)
-
-## 💻 Usage
-
-### Save from Local
-
-```dart
-// Save Image (Supports two ways)
-await Gal.putImage('$filePath');
-await Gal.putImageBytes('$uint8List');
-
-// Save Video
-await Gal.putVideo('$filePath');
-
-// Save to Album
-await Gal.putImage('$filePath', album: '$album')
-...
+```text
+gal/
+  .git/
+  pubspec.yaml       # gal_ohos，发布到 https://pub.dev
+  lib/              # 保留上游 Dart API；内部引用使用相对路径
+  ohos/             # GalOhosPlugin 原生实现
 ```
 
-### Download from Internet
+原 Android、Darwin、Windows 源码保留供对照，由 .pubignore 排除出发布归档，
+本包只声明鸿蒙平台。标准 gal 主包继续提供业务调用入口；App 通过上文依赖方式
+加载本包的原生实现。本仓库根包只发布 gal_ohos，后续私有 gal 主包配置另行处理。
 
-```console
-flutter pub add dio
+在本仓库根目录验证和发布：
+
+```sh
+export PUB_HOSTED_URL=https://pub.dev
+fvm flutter pub get --no-example
+fvm flutter test --no-pub
+fvm dart analyze lib test
+fvm dart pub publish --dry-run
+fvm dart pub publish
 ```
 
-```dart
-// Download Image
-final imagePath = '${Directory.systemTemp.path}/image.jpg';
-await Dio().download('$url',imagePath);
-await Gal.putImage(imagePath);
-
-// Download Video
-final videoPath = '${Directory.systemTemp.path}/video.mp4';
-await Dio().download('$url',videoPath);
-await Gal.putVideo(videoPath);
-```
-
-### Save from Camera
-
-```console
-flutter pub add image_picker
-```
-
-```dart
-// Capture and Save
-final image = await ImagePicker.pickImage(source: ImageSource.camera);
-await Gal.putImage(image.path);
-```
-
-```console
-flutter pub add camera
-```
-
-```dart
-// Record and Save
-...
-final video = await controller.stopVideoRecording();
-await Gal.putVideo(video.path);
-```
-
-### Handle Permissions
-
-```dart
-// Check Access Permission
-final hasAccess = await Gal.hasAccess();
-
-// Request Access Permission
-await Gal.requestAccess();
-
-// ... for saving to album
-final hasAccess = await Gal.hasAccess(toAlbum: true);
-await Gal.requestAccess(toAlbum: true);
-```
-
-### Handle Errors
-
-```dart
-// Save Image with try-catch
-try {
-  await Gal.putImage('$filePath');
-} on GalException catch (e) {
-  log(e.type.message);
-}
-
-// Exception Type
-enum GalExceptionType {
-  accessDenied,
-  notEnoughSpace,
-  notSupportedFormat,
-  unexpected;
-
-  String get message => switch (this) {
-        accessDenied => 'Permission to access the gallery is denied.',
-        notEnoughSpace => 'Not enough space for storage.',
-        notSupportedFormat => 'Unsupported file format.',
-        unexpected => 'An unexpected error has occurred.',
-      };
-}
-```
-
-## 📚 Documentation
-
-If you write an article about Gal, let us know in the discussion and we'll post the URL in the wiki or readme 🤝
-
-* ### [🎯 Example](https://github.com/natsuk4ze/gal/blob/main/example/lib/main.dart)
-
-* ### [👌 Best Practices](https://github.com/natsuk4ze/gal/wiki/Best-Practice)
-
-* ### [🏠 Official Wiki](https://github.com/natsuk4ze/gal/wiki)
-
-* ### [💚 Contributing](https://github.com/natsuk4ze/gal/blob/main/CONTRIBUTING.md)
-
-* ### [💬 Q&A](https://github.com/natsuk4ze/gal/discussions/categories/q-a)
-
-## 💚 Trusted by Major Projects
-
-Although Gal has only been released for a short time, it's already trusted by major projects.
-
-* ### [localsend - 60k⭐️](https://github.com/localsend/localsend)
-
-* ### [flutter-quill-extensions - 2.6k⭐️](https://github.com/singerdmx/flutter-quill)
-
-* ### [stream-chat-flutter - 1k⭐️](https://github.com/GetStream/stream-chat-flutter)
-
-* ### [Thunder - 0.8k⭐️](https://github.com/thunder-app/thunder)
-
-and more...
-
-## HarmonyOS platform implementation
-
-This fork adds the independent federated package [gal_ohos](packages/gal_ohos).
-The original Gal package remains at the repository root. Only `packages/gal_ohos`
-is intended for publication to pub.dev from this fork. See its README for setup,
-system-confirmed saves, supported APIs, platform limitations and publication.
-
-The implementation branch `feat/gal-ohos-1.0.0` starts from the official
-`v2.3.3` release, not the moving `main` branch.
+发布顺序为：验证 → Git 提交、推送 → 根目录发布 gal_ohos。
+`publish_to: https://pub.dev` 固定上传目标；不从 packages 子目录发布。
+首次公开发布需要按终端提示完成发布账户的浏览器授权。测试构建不替代真机验收。

@@ -73,4 +73,9 @@ GeneratedPluginRegistrant.*
 # HarmonyOS plugin tooling
 .fvm/
 !/.fvmrc
-!/packages/gal_ohos/.pubignore
+!/.pubignore
+
+# Generated HarmonyOS files
+.hvigor/
+oh_modules/
+BuildProfile.ets
