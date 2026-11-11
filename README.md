@@ -83,5 +83,5 @@ fvm dart pub publish
 ```
 
 发布顺序为：验证 → Git 提交、推送 → 根目录发布 gal_ohos。
-`publish_to: https://pub.dev` 固定上传目标；不从 packages 子目录发布。
+公开包省略 `publish_to`，发布时显式使用 `PUB_HOSTED_URL=https://pub.dev`；不从 packages 子目录发布。
 首次公开发布需要按终端提示完成发布账户的浏览器授权。测试构建不替代真机验收。

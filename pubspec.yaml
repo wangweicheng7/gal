@@ -1,7 +1,6 @@
 name: gal_ohos
 description: HarmonyOS implementation of Gal using system-confirmed gallery saves.
 version: 1.0.0
-publish_to: https://pub.dev
 homepage: https://github.com/wangweicheng7/gal
 repository: https://github.com/wangweicheng7/gal/tree/feat/gal-ohos-1.0.0
 issue_tracker: https://github.com/wangweicheng7/gal/issues
